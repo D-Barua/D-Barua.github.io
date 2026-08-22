@@ -1,0 +1,134 @@
+---
+import owner from '../data/owner.js';
+
+const mainNavigation = owner.navigation.main;
+---
+
+<nav class="fixed top-0 left-0 w-full z-50 transition-all duration-500 pointer-events-none" id="main-nav">
+    <div class="absolute inset-0 bg-background/0 backdrop-blur-none border-b border-transparent transition-all duration-500" id="nav-bg"></div>
+
+    <div class="container mx-auto px-6 h-24 flex items-center justify-between relative z-50 pointer-events-auto">
+        <a href="/" class="lg:hidden">
+            <img src="/assets/your-logo.png" alt="Home" class="w-8 h-8" />
+        </a>
+
+        <!-- Desktop Links -->
+        <div class="hidden lg:flex flex-1 items-center justify-center gap-8 lg:gap-12">
+            {mainNavigation.map((item) => (
+                <a 
+                    href={item.url} 
+                    class="nav-item text-xs lg:text-sm font-sans font-bold tracking-[0.2em] uppercase text-gray-400 hover:text-primary transition-colors relative group magnetic py-4"
+                >
+                    <span class="inline-block">{item.title}</span>
+                    <span class="absolute bottom-0 left-0 w-full h-[1px] bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+            ))}
+        </div>
+        
+        <!-- Right Side: Let's Talk + Mobile Toggle -->
+        <div class="flex items-center gap-6 z-[100]">
+            <a href="/contact" class="hidden lg:flex items-center justify-center h-10 px-8 border border-white/20 rounded-full text-xs font-sans font-bold uppercase tracking-widest hover:bg-primary hover:border-primary hover:text-white transition-all hover:scale-105 magnetic backdrop-blur-sm bg-white/5 text-white">
+                Let's Talk
+            </a>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="lg:hidden text-white magnetic relative w-12 h-12 focus:outline-none flex items-center justify-center" aria-label="Menu">
+                <span class="sr-only">Menu</span>
+                <div class="relative w-6 h-5">
+                    <span id="hamburger-line-1" class="absolute top-0 left-0 w-full h-0.5 bg-white transition-all duration-300 origin-center"></span>
+                    <span id="hamburger-line-2" class="absolute top-1/2 left-0 w-full h-0.5 bg-white transition-all duration-300 -translate-y-1/2"></span>
+                    <span id="hamburger-line-3" class="absolute bottom-0 left-0 w-full h-0.5 bg-white transition-all duration-300 origin-center"></span>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-black z-40 opacity-0 pointer-events-none transition-opacity duration-500 lg:hidden overflow-y-auto">
+        <div class="min-h-screen flex flex-col items-center justify-center gap-8 text-center py-20 px-6">
+            {mainNavigation.map((item) => (
+                <a href={item.url} class="mobile-link text-4xl sm:text-5xl font-display font-light text-white hover:text-gray-400 transition-colors transform translate-y-8 opacity-0">
+                    {item.title}
+                </a>
+            ))}
+            
+            <a href="/contact" class="mobile-link mt-8 px-10 py-4 bg-white text-black rounded-full text-lg font-sans font-bold uppercase tracking-widest hover:scale-105 transition-all transform translate-y-8 opacity-0">
+                Let's Talk
+            </a>
+        </div>
+    </div>
+</nav>
+
+<script>
+    // Scoped script for Astro component
+    const setupNavbar = () => {
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const menuOverlay = document.getElementById('mobile-menu');
+        const line1 = document.getElementById('hamburger-line-1');
+        const line2 = document.getElementById('hamburger-line-2');
+        const line3 = document.getElementById('hamburger-line-3');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        const navBg = document.getElementById('nav-bg');
+        let isOpen = false;
+
+        if(!menuBtn || !menuOverlay) return;
+
+        function openMenu() {
+            isOpen = true;
+            menuOverlay.classList.remove('opacity-0', 'pointer-events-none');
+            menuOverlay.classList.add('opacity-100', 'pointer-events-auto');
+            document.body.style.overflow = 'hidden';
+            
+            line1.classList.add('rotate-45', 'translate-y-[9px]');
+            line2.classList.add('opacity-0', 'scale-0');
+            line3.classList.add('-rotate-45', '-translate-y-[9px]');
+            
+            mobileLinks.forEach((link, i) => {
+                setTimeout(() => {
+                    link.classList.remove('translate-y-8', 'opacity-0');
+                    link.classList.add('translate-y-0', 'opacity-100');
+                }, 100 + i * 75);
+            });
+        }
+
+        function closeMenu() {
+            isOpen = false;
+            menuOverlay.classList.add('opacity-0', 'pointer-events-none');
+            menuOverlay.classList.remove('opacity-100', 'pointer-events-auto');
+            document.body.style.overflow = '';
+            
+            line1.classList.remove('rotate-45', 'translate-y-[9px]');
+            line2.classList.remove('opacity-0', 'scale-0');
+            line3.classList.remove('-rotate-45', '-translate-y-[9px]');
+            
+            mobileLinks.forEach(link => {
+                link.classList.add('translate-y-8', 'opacity-0');
+                link.classList.remove('translate-y-0', 'opacity-100');
+            });
+        }
+
+        menuBtn.addEventListener('click', () => {
+            if (isOpen) closeMenu();
+            else openMenu();
+        });
+
+        mobileLinks.forEach(link => {
+            if (!link.hasAttribute('data-no-close')) {
+                link.addEventListener('click', closeMenu);
+            }
+        });
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navBg.classList.remove('bg-background/0', 'backdrop-blur-none', 'border-transparent');
+                navBg.classList.add('bg-background/80', 'backdrop-blur-lg', 'border-white/5');
+            } else {
+                navBg.classList.add('bg-background/0', 'backdrop-blur-none', 'border-transparent');
+                navBg.classList.remove('bg-background/80', 'backdrop-blur-lg', 'border-white/5');
+            }
+        });
+    };
+
+    // Run when the DOM is ready
+    document.addEventListener('DOMContentLoaded', setupNavbar);
+</script>

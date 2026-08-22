@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import projects from '../data/projects.js';
+---
+
+<BaseLayout title="My Projects">
+  <main class="pt-32 pb-24 relative z-10">
+    <div class="container mx-auto px-6 max-w-6xl">
+      
+      <!-- Elegant Left-Aligned Header -->
+      <div class="mb-20">
+        <h1 class="text-6xl md:text-8xl font-display font-bold text-white mb-6 tracking-tight">
+          All My Works
+        </h1>
+        <p class="text-gray-400 text-lg max-w-2xl leading-relaxed">
+          A selection of work designed with precision and passion.
+        </p>
+      </div>
+
+      <!-- Projects Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16">
+        
+        {projects.map((project) => (
+          <a 
+            href={project.link} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="group flex flex-col cursor-pointer"
+          >
+            
+            <!-- Separated Image Container with heavy rounding -->
+            <div class="relative w-full aspect-[4/3] rounded-[2.5rem] overflow-hidden border border-white/5 bg-[#0b1018] mb-8">
+              <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10 pointer-events-none"></div>
+              <img 
+                src={project.image} 
+                alt={project.name} 
+                class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-transform duration-700 ease-out relative z-0" 
+              />
+            </div>
+            
+            <!-- Content Area below the image -->
+            <div class="flex justify-between items-start px-2">
+              
+              <!-- Left Side: Text -->
+              <div class="flex flex-col pr-8">
+                <h3 class="text-3xl font-display font-bold text-white mb-3 group-hover:text-gray-300 transition-colors">
+                  {project.name}
+                </h3>
+                <p class="text-gray-400 leading-relaxed text-base max-w-md">
+                  {project.description}
+                </p>
+              </div>
+              
+              <!-- Right Side: Circular Arrow Button -->
+              <div class="w-12 h-12 mt-1 shrink-0 rounded-full border border-white/10 flex items-center justify-center text-white group-hover:bg-white group-hover:text-black group-hover:border-white transition-all duration-300">
+                <i class="fas fa-arrow-right text-sm group-hover:translate-x-1 transition-transform duration-300"></i>
+              </div>
+            </div>
+            
+          </a>
+        ))}
+
+      </div>
+    </div>
+  </main>
+</BaseLayout>

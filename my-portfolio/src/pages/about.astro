@@ -1,0 +1,37 @@
+---
+// 1. Import your layout (so you get the navbar, footer, and styling back!)
+import BaseLayout from '../layouts/BaseLayout.astro';
+// 2. Import your data
+import owner from '../data/owner.js';
+
+const aboutData = owner.about;
+---
+
+<BaseLayout title="About | Diptanshu Barua">
+    <!-- Everything inside here gets the beautiful styling -->
+    <section class="py-32 relative container mx-auto px-6 z-10 min-h-screen flex flex-col justify-center">
+        
+        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            
+            <!-- The Image (Make sure the name in owner.js matches a real file in your public/assets folder!) -->
+            <div class="relative group">
+                <div class="absolute -inset-4 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition duration-700"></div>
+                <img src={aboutData.image} alt="Diptanshu Barua" class="relative rounded-3xl shadow-xl w-full border border-white/10" />
+            </div>
+
+            <!-- The Text -->
+            <div>
+                <h2 class="text-4xl md:text-5xl font-display font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-500">
+                    {aboutData.title}
+                </h2>
+                
+                <div class="space-y-6 text-gray-400 leading-relaxed">
+                    {aboutData.paragraphs.map((text) => (
+                        <p>{text}</p>
+                    ))}
+                </div>
+            </div>
+            
+        </div>
+    </section>
+</BaseLayout>

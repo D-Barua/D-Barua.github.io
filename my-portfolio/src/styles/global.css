@@ -1,0 +1,7 @@
+@import "tailwindcss";
+/* Only hide the default cursor on desktop screens (768px and wider) */
+@media (min-width: 768px) {
+  * {
+    cursor: none !important;
+  }
+}

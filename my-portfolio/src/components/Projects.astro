@@ -1,0 +1,33 @@
+---
+import projects from '../data/projects.js';
+---
+
+<section id="projects" class="py-24 relative z-10">
+  <div class="container mx-auto px-6 max-w-6xl">
+    
+    <div class="flex justify-between items-end mb-16">
+      <div>
+        <h2 class="text-4xl md:text-5xl font-display font-bold text-white mb-4">Selected Works</h2>
+        <p class="text-gray-400 text-lg">A glimpse into my recent projects.</p>
+      </div>
+      <a href="/projects" class="hidden md:flex items-center text-sm font-mono text-gray-400 hover:text-white transition-colors group">
+        VIEW ALL PROJECTS 
+        <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+      </a>
+    </div>
+
+    <!-- Shows only the first 2 projects on the homepage -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {projects.slice(0, 2).map((project) => (
+        <a href={project.link} target="_blank" rel="noopener noreferrer" class="group block bg-[#0b1018] border border-white/5 rounded-[2rem] p-6 hover:border-white/10 hover:-translate-y-1 transition-all duration-500 overflow-hidden">
+          <div class="w-full aspect-[16/10] rounded-xl overflow-hidden bg-white/5 mb-6 relative">
+             <img src={project.image} alt={project.name} class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
+          </div>
+          <h3 class="text-2xl font-display font-bold text-white mb-2">{project.name}</h3>
+          <p class="text-gray-400 text-sm line-clamp-2">{project.description}</p>
+        </a>
+      ))}
+    </div>
+    
+  </div>
+</section>

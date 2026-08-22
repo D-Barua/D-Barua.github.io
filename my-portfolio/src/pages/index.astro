@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+// We will create and import these components one by one!
+import Hero from '../components/Hero.astro';
+import Skills from '../components/Skills.astro';
+import Projects from '../components/Projects.astro';
+---
+
+<BaseLayout title="Home">
+  <Hero />
+  
+  <div class="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-12"></div>
+  
+  <Skills />
+  <Projects />
+</BaseLayout>

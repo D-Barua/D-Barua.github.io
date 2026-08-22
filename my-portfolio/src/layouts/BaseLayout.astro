@@ -1,0 +1,132 @@
+---
+// We will create these components in the next steps!
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import Loader from '../components/Loader.astro';
+import '../styles/global.css'
+
+interface Props {
+  title?: string;
+}
+
+const { title = "My Portfolio" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Outfit:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+
+    <!-- PWA Manifest & Service Worker -->
+    <link rel="manifest" href="/manifest.json">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register("/sw.js")
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</head>
+
+<body class="bg-[#04080e] text-white min-h-screen selection:bg-purple-500/30 overflow-x-hidden flex flex-col">
+    
+    <!-- Particle Background Container -->
+    <div id="tsparticles" class="fixed inset-0 z-0 pointer-events-none"></div>
+
+    <!-- Custom Cursor -->
+    <div 
+        id="cursor-dot" 
+        class="fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-[999999] hidden md:block mix-blend-difference"
+        style="transform: translate(-50%, -50%);"
+    ></div>
+
+    <div 
+        id="cursor-ring" 
+        class="fixed top-0 left-0 w-8 h-8 border border-white/50 rounded-full pointer-events-none z-[999998] transition-colors duration-300 ease-out hidden md:block mix-blend-difference"
+        style="transform: translate(-50%, -50%); transition-property: background-color, transform;"
+    ></div>
+
+    <!-- Layout -->
+    <Loader />
+    <Navbar />
+
+    <main class="flex-grow relative z-10 w-full">
+        <slot />
+    </main>
+
+    <Footer />
+
+    <!-- Particle.js Library & Init -->
+    <script is:inline src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
+    <script is:inline src="/assets/js/particles-init.js"></script>
+
+   <!-- Custom Cursor Script -->
+    <script is:inline>
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorRing = document.getElementById('cursor-ring');
+        
+        // Variables for the ring's smooth trailing
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let ringX = mouseX;
+        let ringY = mouseY;
+        
+        // 1. Move the DOT instantly with the mouse
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            if(cursorDot) {
+                cursorDot.style.left = mouseX + 'px';
+                cursorDot.style.top = mouseY + 'px';
+            }
+        });
+
+        // 2. Make the RING smoothly chase the mouse
+        function animateRing() {
+            // 0.15 controls the elasticity. Lower = more trailing/floaty.
+            ringX += (mouseX - ringX) * 0.15;
+            ringY += (mouseY - ringY) * 0.15;
+            
+            if(cursorRing) {
+                cursorRing.style.left = ringX + 'px';
+                cursorRing.style.top = ringY + 'px';
+            }
+            
+            requestAnimationFrame(animateRing);
+        }
+        animateRing();
+
+        // 3. Hover effects applied ONLY to the trailing ring
+        const interactables = document.querySelectorAll('a, button');
+        interactables.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                if(cursorRing) {
+                    cursorRing.classList.add('bg-white/20');
+                    cursorRing.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                }
+            });
+            el.addEventListener('mouseleave', () => {
+                if(cursorRing) {
+                    cursorRing.classList.remove('bg-white/20');
+                    cursorRing.style.transform = 'translate(-50%, -50%) scale(1)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
