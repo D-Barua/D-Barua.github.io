@@ -13,13 +13,6 @@ const hideCTA = currentPath.includes('contact') || currentPath.includes('404');
 
 <footer class="bg-black/90 pt-24 pb-12 border-t border-white/10 relative overflow-hidden" id="footer">
     
-    <!-- GitHub Stats Data Script -->
-    <script is:inline define:vars={{ username: owner.github_username }}>
-        window.githubUsername = username;
-    </script>
-    <!-- Assuming you copied assets/js/github.js into your public folder -->
-    <script src="/assets/js/github.js" type="module" defer></script>
-
     <div class="container mx-auto px-6 relative z-10">
         
         <!-- Top Section: CTA (Hidden on Contact Page and 404) -->
@@ -71,7 +64,10 @@ const hideCTA = currentPath.includes('contact') || currentPath.includes('404');
         <div class="flex flex-col md:flex-row justify-between items-center pt-16 mt-16 border-t border-white/5 text-gray-600 text-xs tracking-widest relative">
             <p>&copy; {currentYear} {owner.name}</p>
             <div class="flex items-center gap-2 mt-4 md:mt-0">
-                <span>Designed & Built with ❤️ by DB</span>
+                <span class="flex items-center whitespace-nowrap">
+                    Designed & Built with ❤️ by 
+                    <img src="/assets/img/DB.png" alt="DB" class="w-7 h-7 ml-2" />
+                </span>
             </div>
             
             <!-- Back to Top (Fixed Position) -->
